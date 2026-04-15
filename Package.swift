@@ -1,12 +1,6 @@
 // swift-tools-version:5.3
 
-import Foundation
 import PackageDescription
-
-var sources = ["src/parser.c"]
-if FileManager.default.fileExists(atPath: "src/scanner.c") {
-    sources.append("src/scanner.c")
-}
 
 let package = Package(
     name: "TreeSitterObjc",
@@ -14,19 +8,47 @@ let package = Package(
         .library(name: "TreeSitterObjc", targets: ["TreeSitterObjc"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ChimeHQ/SwiftTreeSitter", from: "0.8.0"),
+        .package(name: "SwiftTreeSitter", url: "https://github.com/tree-sitter/swift-tree-sitter", from: "0.9.0"),
     ],
     targets: [
         .target(
             name: "TreeSitterObjc",
             dependencies: [],
             path: ".",
-            sources: sources,
+            exclude: [
+                "binding.gyp",
+                "bindings/c",
+                "bindings/go",
+                "bindings/node",
+                "bindings/python",
+                "bindings/rust",
+                "Cargo.toml",
+                "Cargo.lock",
+                "CMakeLists.txt",
+                "eslint.config.mjs",
+                "go.mod",
+                "go.sum",
+                "grammar.js",
+                "LICENSE",
+                "Makefile",
+                "package-lock.json",
+                "package.json",
+                "pyproject.toml",
+                "README.md",
+                "setup.py",
+                "src/grammar.json",
+                "src/node-types.json",
+                "test",
+                "tree-sitter.json",
+            ],
+            sources: [
+                "src/parser.c",
+            ],
             resources: [
-                .copy("queries")
+                .copy("queries"),
             ],
             publicHeadersPath: "bindings/swift",
-            cSettings: [.headerSearchPath("src")]
+            cSettings: [.headerSearchPath("src")],
         ),
         .testTarget(
             name: "TreeSitterObjcTests",
@@ -34,8 +56,8 @@ let package = Package(
                 "SwiftTreeSitter",
                 "TreeSitterObjc",
             ],
-            path: "bindings/swift/TreeSitterObjcTests"
-        )
+            path: "bindings/swift/TreeSitterObjcTests",
+        ),
     ],
-    cLanguageStandard: .c11
+    cLanguageStandard: .c11,
 )
